@@ -607,6 +607,101 @@
   </div>
 </div>
 
+
+  <div class="modal fade" id="location" tabindex="-1" aria-labelledby="addMaterialModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">  <!-- modal-lg = wider modal, good for forms -->
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="addMaterialModalLabel">
+          New Location
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <!-- Body with the form -->
+      <div class="modal-body section" id="locationForm">
+<!-- ///////location utu gasha jirtuu dhaabede -->
+ 
+        <form id="registerLocationForm">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="material" class="form-label">
+                Location <span class="text-danger">*</span>
+              </label>
+              <input 
+                type="text" 
+                class="form-control material" 
+                id="material" 
+                name="material"
+                placeholder="e.g. Cement, Sand, Rebar..." 
+                
+              >
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="amount" class="form-label">
+                Amount <span class="text-danger">*</span>
+              </label>
+              <input 
+                type="text" 
+                class="form-control amount" 
+                id="amount" 
+                name="amount"
+                placeholder="e.g. 50 bags, 10 tons, 200 pcs" 
+                
+              >
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="price" class="form-label">
+                Price <span class="text-danger">*</span>
+              </label>
+              <input 
+                type="number" 
+                step="0.01" 
+                class="form-control price" 
+                id="price" 
+                name="price"
+                placeholder="0.00" 
+                
+              >
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="location" class="form-label">
+                Location <span class="text-danger">*</span>
+              </label>
+              <input 
+                type="text" 
+                class="form-control location" 
+                id="location" 
+                name="location"
+                placeholder="e.g. Warehouse A, Site 1..." 
+              >
+            </div>
+          </div>
+
+          <!-- Submit button inside modal -->
+          <button type="submit" class="btn btn-success w-100 mt-4">
+            <i class="bi bi-check-circle me-2"></i> Submit Material
+          </button>
+        </form>
+
+      </div>
+
+      <!-- Optional footer with close button -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 </div>
 
 <!-- Mobile Sidebar Offcanvas -->
@@ -630,11 +725,9 @@
   </div>
 </div>
 
-
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../public/admin/auth.js"></script>
-<script src="../public/admin/admin.js"></script>
+<script src="/admin/auth.js"></script>
+
 <script>
 // Simple section switching
 document.querySelectorAll('[data-section]').forEach(link => {

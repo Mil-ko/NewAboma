@@ -1,0 +1,10 @@
+POST http://localhost:3000/admin/api/addProject
+Content-Type: application/json
+
+{
+  "name": "Nekemte",
+  "status": "active"
+}
+####
+GET  http://localhost:3000/admin/api/users
+ 

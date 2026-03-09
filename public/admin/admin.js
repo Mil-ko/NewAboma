@@ -189,10 +189,11 @@ function attachMaterialDeleteListeners() {
     });
 }
 
+displayAllUsers();
 // ============ Display Total users ================
 async function displayAllUsers() {
   try {
-    const res = await fetch('/allWorkers');
+    const res = await fetch('/admin/api/users');
     if (!res.ok) throw new Error('Failed to fetch');
 
     const data = await res.json();

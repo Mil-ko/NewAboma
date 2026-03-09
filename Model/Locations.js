@@ -1,3 +1,5 @@
+ const sequelize = require("../Model/db");
+const { DataTypes } = require("sequelize");
 const Location = sequelize.define(
   "Location",
   {
@@ -23,7 +25,7 @@ const Location = sequelize.define(
   },
   {
     tableName: "locations", // exact table name
-    timestamps: false        // disable createdAt/updatedAt
+    timestamps: true        // disable createdAt/updatedAt
   }
 );
 

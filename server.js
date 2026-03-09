@@ -1,19 +1,28 @@
 // const swaggerUi = require("swagger-ui-express");
 // const swaggerJsdoc = require("swagger-jsdoc");
+// const cors = require("cors")
+
 const express = require('express')
 const sequelize = require("./Model/db");
 const session = require("express-session");
 const path = require("path");
-// const cors = require("cors")
+const { Server } = require('socket.io');
+const http = require('http');
 const bcrypt =require("bcrypt")
+const Locations = require("./Model/Locations")
 const User = require("./Model/User"); // import the User model
 const Material = require("./Model/Material"); // import the Material model
+const Project = require("./Model/Project")
 const db = require("./Model/db");
 const app = express()
-// const pool = require("./Model/db ")
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: { origin: '*' } // Change in production!
+});
 
 
 const { Sequelize , QueryTypes } = require('sequelize');
+const { SELECT } = require('sequelize/lib/query-types');
 // const sequelize = new Sequelize('mysql::memory:');
 
 app.use(express.json());
@@ -73,7 +82,8 @@ app.get("/me", (req, res) => {
     })
 }  else { res.status(401).json ({ message : "Not logged in "})}
 });
-
+// ============ POST API ZONE 
+ 
 app.post('/register',isAuthenticated, isAdmin, async (req,res)=>{
   
 /// new registration for worker
@@ -185,16 +195,12 @@ app.post(`/admin/api/materials`,  async (req,res)=>{
             });
         } 
         // Insert the new material into the database
-        await sequelize.query(
-            `
-            INSERT INTO materials (name, unit)
-            VALUES (?, ?)
-            `,
-            {
-                replacements: [name, unit], // use req.user from session
-                type: QueryTypes.INSERT
-            }
-        );
+        await Material.create({
+               name,
+               unit 
+            })
+         res.status(201).json({message:"material registered succesfully "})
+        
     }
       catch (error) { 
         console.error(error);
@@ -202,46 +208,85 @@ app.post(`/admin/api/materials`,  async (req,res)=>{
       }
     })
 
+app.post('/admin/api/addLocation',async(req,res)=>{
+    try {
+      const {location_name , type} =req.body
+      if (!location_name || !type) {
+        return res.status(400).json({
+          success: false,
+          message: "location_name and type are required fields"
+        });
+      }
+      await sequelize.query(
+        `
+        INSERT INTO locations (location_name, type)
+        VALUES (?, ?)
+        `,
+        {
+          replacements: [location_name, type], // use req.user from session
+          type: QueryTypes.INSERT
+        }
+      );
+      res.status(201).json({message:"Location added successfully"})
+
+      
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({message:"Server error"});
+    }
+
+})
+;
+app.post('/admin/api/addProject', async(req,res)=>{
+    console.log("heree")
+  try {
+    const {name, status}=req.body
+      if (!name) {
+        return res.status(400).json({
+          success: false,
+          message: "name and type are required fields"
+        })
+
+  }
+    await Project.create(
+     {
+     project_name :name ,
+     status
+     }
+    );
+    res.status(201).json({message:"Project added successfully"})  
+  }
+  catch (error) {
+      console.error(error);
+      res.status(500).json({message:"Server error"});
+    }
+
+
+})
+
+
+//============  get api zone  =============== 
+
+app.get(`admin/api/users`,async(req,res)=>{
+  try{
+  const [users] =await db.query(
+    `SELECT *
+     FROM users `
+  )
+ res.status(200).json(users)
+  }
+  catch(err){
+    console.error(err)
+  }
+})
 app.get('/admin/api/location',isAuthenticated, isAdmin, async(req,res) =>{
     try {
-        const locations = await sequelize.query(
-          `
-          SELECT 
-            location_id,
-            locationName
-          FROM locations
-          ORDER BY locationName ASC
-          `,
-  {
-    type: QueryTypes.SELECT, // return only rows
-  }
-);
+        const locations = await Locations.findAll();
     } catch (error) {
         console.error(error);
         res.status(500).json({message:"Server error"});
     }
 } )
-
-
-app.get("/admin/api/materials", isAuthenticated, isAdmin, (req,res)=>{
-    const {
-    name,          // required
-    unit,          // required (pcs, kg, m, bag, liter, ...)
-       // optional, default 0
-    performed_by   // optional - who added this material (worker/admin)
-  } = req.body;
-
-
-
-  if (!name || !unit) {
-    return res.status(400).json({
-      success: false,
-      message: "name and unit are required fields"
-    });
-  }
-    res.json({message: "Welcome to the admin panel"})
-})
-
 
 
 

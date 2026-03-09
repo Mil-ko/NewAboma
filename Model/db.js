@@ -16,7 +16,7 @@ const sequelize = new Sequelize(
     await sequelize.authenticate();
     console.log("Database connected!");
   } catch (err) {
-    console.error("Connection error:", err);
+    console.log("Connection error:", err);
   }
 })();
 
